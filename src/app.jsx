@@ -157,6 +157,52 @@ function buttonStyle(primary = true) {
   };
 }
 
+// 核心：判斷現在可約 / 幾點可約
+function getAvailableLabel(blocks) {
+  const now = new Date();
+  let nowMinutes = now.getHours() * 60 + now.getMinutes();
+
+  // 凌晨 00:00~05:59 視為前一天的延續營業時段
+  if (now.getHours() >= 0 && now.getHours() <= 5) {
+    nowMinutes += 24 * 60;
+  }
+
+  if (!blocks.length) return '👉現在可約💦';
+
+  for (let i = 0; i < blocks.length; i += 1) {
+    const block = blocks[i];
+    const blockStart = timeToMinutes(block.items[0].time);
+    const blockEnd = block.availableAt;
+
+    // 在第一段忙碌前
+    if (i === 0 && nowMinutes < blockStart) {
+      return '👉現在可約💦';
+    }
+
+    // 現在正在忙
+    if (nowMinutes >= blockStart && nowMinutes < blockEnd) {
+      return `👉${minutesToDisplay(blockEnd)}可約💦`;
+    }
+
+    const nextBlock = blocks[i + 1];
+
+    // 兩段忙碌中間空檔
+    if (nextBlock) {
+      const nextStart = timeToMinutes(nextBlock.items[0].time);
+      if (nowMinutes >= blockEnd && nowMinutes < nextStart) {
+        return '👉現在可約💦';
+      }
+    } else {
+      // 最後一段忙碌後
+      if (nowMinutes >= blockEnd) {
+        return '👉現在可約💦';
+      }
+    }
+  }
+
+  return '👉現在可約💦';
+}
+
 export default function App() {
   const [hydrated, setHydrated] = useState(false);
   const [header, setHeader] = useState(defaultData.header);
@@ -233,19 +279,17 @@ export default function App() {
       lines.push(`⚜ ${person.planText}`);
       lines.push(`⚜ ${person.priceText}`);
 
-      const personBookings = bookings.filter((b) => b.staffName === person.name && b.time.trim());
+      const personBookings = bookings
+        .filter((b) => b.staffName === person.name && b.time.trim())
+        .sort((a, b) => timeToMinutes(a.time) - timeToMinutes(b.time));
+
       const blocks = buildBlocks(personBookings);
 
-      if (!blocks.length) {
-        lines.push('👉現在可約💦');
-      } else {
-        blocks.forEach((block) => {
-          block.items.forEach((item) => {
-            lines.push(`${item.time.replace(':', '.')}／${item.plan}`);
-          });
-          lines.push(`👉${minutesToDisplay(block.availableAt)}可約💦`);
-        });
-      }
+      personBookings.forEach((item) => {
+        lines.push(`${item.time.replace(':', '.')}／${item.plan}`);
+      });
+
+      lines.push(getAvailableLabel(blocks));
 
       if (index !== sortedStaff.length - 1) lines.push('------------------------------');
     });
