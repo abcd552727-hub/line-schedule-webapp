@@ -21,11 +21,11 @@ const defaultData = {
     footer2: '感謝配合 🙏',
   },
   staff: [
-    { id: 1, name: '糖糖', area: '恆春鎮', planText: '方案20/40/60/2+1/3+1/5+3', priceText: '底1.5/2.0/2.3', enabled: true },
-    { id: 2, name: '婷ㄦ', area: '恆春鎮', planText: '方案20/40/60/2+1/3+1/5+3', priceText: '底1.5/2.0/2.3', enabled: true },
-    { id: 3, name: '琪琪', area: '恆春鎮', planText: '方案20/40/60/2+1/3+1/5+3', priceText: '底1.5/2.0/2.3', enabled: true },
-    { id: 4, name: '三歲', area: '東港鎮', planText: '方案20/40/60/2+1/3+1/5+3', priceText: '底1.5/2.0/2.3', enabled: true },
-    { id: 5, name: '妍妍', area: '東港鎮', planText: '方案20/40/60/2+1/3+1/5+3', priceText: '底1.5/2.0/2.3', enabled: true },
+    { id: 1, name: '糖糖', area: '恆春鎮', planText: '方案20/40/60', priceText: '底1.5/2.0/2.3' },
+    { id: 2, name: '婷ㄦ', area: '恆春鎮', planText: '方案20/40/60', priceText: '底1.5/2.0/2.3'},
+    { id: 3, name: '琪琪', area: '恆春鎮', planText: '方案20/40/60', priceText: '底1.5/2.0/2.3'},
+    { id: 4, name: '三歲', area: '東港鎮', planText: '方案20/40/60', priceText: '底1.5/2.0/2.3'},
+    { id: 5, name: '妍妍', area: '東港鎮', planText: '方案20/40/60/', priceText: '底1.5/2.0/2.3'},
   ],
   bookings: [
     { id: 1, staffName: '糖糖', time: '13:00', plan: '60', price: '', customer: '', note: '' },
